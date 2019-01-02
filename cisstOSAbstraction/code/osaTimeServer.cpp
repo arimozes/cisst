@@ -31,7 +31,11 @@ http://www.cisst.org/cisst/license.txt.
 #endif // CISST_LINUX_RTAI
 
 #if (CISST_OS == CISST_LINUX_XENOMAI)
-#include <native/timer.h>         // xenomai native timer service
+  #ifdef __COBALT__
+    #include <alchemy/timer.h>    // xenomai native timer service
+  #else
+    #include <native/timer.h>     // xenomai native timer service
+  #endif
 #endif
 
 #if (CISST_OS == CISST_LINUX) || (CISST_OS == CISST_DARWIN) || (CISST_OS == CISST_SOLARIS) || (CISST_OS == CISST_LINUX_RTAI)
@@ -216,9 +220,15 @@ void osaTimeServer::Synchronize(void)
 #elif (CISST_OS == CISST_LINUX_XENOMAI)
     SRTIME counterPre, counterPost, counterAvg, timediff;
     struct timespec curTime;
+  #ifdef __COBALT__
+    counterPre = rt_timer_read();
+    int rc = clock_gettime(CLOCK_REALTIME, &curTime);
+    counterPost = rt_timer_read();
+  #else
     counterPre = rt_timer_tsc2ns( rt_timer_tsc() );
     int rc = clock_gettime(CLOCK_REALTIME, &curTime);
     counterPost = rt_timer_tsc2ns( rt_timer_tsc() );
+  #endif
 #endif
 
     counterAvg = (counterPost + counterPre + 1)/2;
@@ -390,7 +400,11 @@ double osaTimeServer::GetRelativeTime(void) const
     RTIME time = rt_get_time_ns();  // RTIME is long long (64 bits)
     answer = static_cast<double>(time-INTERNALS_CONST(CounterOrigin))*cmn_ns;
 #elif (CISST_OS == CISST_LINUX_XENOMAI)
+  #ifdef __COBALT__
+    RTIME time = rt_timer_read();
+  #else
     RTIME time = rt_timer_tsc2ns( rt_timer_tsc() );
+  #endif
     answer = static_cast<double>(time-INTERNALS_CONST(CounterOrigin))*cmn_ns;
 #elif (CISST_OS == CISST_LINUX) || (CISST_OS == CISST_SOLARIS) || (CISST_OS == CISST_QNX)
     struct timespec currentTime;

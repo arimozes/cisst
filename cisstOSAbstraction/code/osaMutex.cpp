@@ -30,9 +30,14 @@ http://www.cisst.org/cisst/license.txt.
     #include <rtai_types.h>
 #elif (CISST_OS == CISST_LINUX_XENOMAI)
 
-#include <native/mutex.h>
-#include <native/task.h>
-#include <pthread.h>
+  #ifdef __COBALT__
+    #include <alchemy/mutex.h>
+    #include <alchemy/task.h>
+  #else
+    #include <native/mutex.h>
+    #include <native/task.h>
+  #endif
+  #include <pthread.h>
 
 #elif (CISST_OS == CISST_LINUX) || (CISST_OS == CISST_DARWIN) || (CISST_OS == CISST_SOLARIS) || (CISST_OS == CISST_QNX)
     #include <pthread.h>

@@ -27,7 +27,11 @@ http://www.cisst.org/cisst/license.txt.
     #include <sched.h>
     #include <string.h>
 #elif (CISST_OS == CISST_LINUX_XENOMAI)
-#include <native/task.h>
+  #ifdef __COBALT__
+    #include <alchemy/task.h>
+  #else
+    #include <native/task.h>
+  #endif
 #elif (CISST_OS == CISST_WINDOWS)
     #include <windows.h>
 #endif
@@ -220,7 +224,11 @@ void osaThread::CreateInternal(const char *name, void* cb, void* userdata)
                             0,
                             0,
                             89,
+  #ifdef __COBALT__
+                            T_JOINABLE,
+  #else
                             T_FPU | T_JOINABLE,
+  #endif
                             (CB_FuncType)cb,
                             (void*)userdata );
     if( retval != 0 ){

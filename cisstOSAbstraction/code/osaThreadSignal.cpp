@@ -37,11 +37,18 @@ http://www.cisst.org/cisst/license.txt.
 #endif // CISST_LINUX_RTAI || CISST_LINUX || CISST_DARWIN || CISST_SOLARIS || CISST_QNX
 
 #if (CISST_OS == CISST_LINUX_XENOMAI)
-#include <native/task.h>
-#include <native/mutex.h>
-#include <native/cond.h>
-#include <native/timer.h>
-#include <sys/time.h>
+  #ifdef __COBALT__
+    #include <alchemy/task.h>
+    #include <alchemy/mutex.h>
+    #include <alchemy/cond.h>
+    #include <alchemy/timer.h>
+  #else
+    #include <native/task.h>
+    #include <native/mutex.h>
+    #include <native/cond.h>
+    #include <native/timer.h>
+  #endif
+  #include <sys/time.h>
 #endif
 
 #if (CISST_OS == CISST_WINDOWS)

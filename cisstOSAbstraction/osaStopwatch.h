@@ -44,7 +44,11 @@ http://www.cisst.org/cisst/license.txt.
 
 #elif (CISST_OS == CISST_LINUX_XENOMAI)
 
-#include <native/timer.h>
+  #ifdef __COBALT__
+    #include <alchemy/timer.h>
+  #else
+    #include <native/timer.h>
+  #endif
 
 #elif (CISST_OS == CISST_LINUX_RTAI) || (CISST_OS == CISST_LINUX) || (CISST_OS == CISST_DARWIN) || (CISST_OS == CISST_SOLARIS)
     #include <sys/time.h>

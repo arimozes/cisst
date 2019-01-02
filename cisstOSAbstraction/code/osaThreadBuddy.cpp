@@ -40,9 +40,14 @@ http://www.cisst.org/cisst/license.txt.
     char __lock_file[256];
 #elif (CISST_OS == CISST_LINUX_XENOMAI)
 
-#include <native/task.h>
-#include <native/timer.h>
-#include <sys/mman.h> // for mlockall                                                                                                      
+  #ifdef __COBALT__
+    #include <alchemy/task.h>
+    #include <alchemy/timer.h>
+  #else
+    #include <native/task.h>
+    #include <native/timer.h>
+  #endif
+  #include <sys/mman.h> // for mlockall                                                                                                      
 
 #elif (CISST_OS == CISST_WINDOWS)
     #include <windows.h>

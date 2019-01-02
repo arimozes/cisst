@@ -34,8 +34,13 @@ http://www.cisst.org/cisst/license.txt.
     #include <rtai_lxrt.h>
 #elif (CISST_OS == CISST_LINUX_XENOMAI)
 
-#include <native/task.h>
-#include <native/timer.h>
+  #ifdef __COBALT__
+    #include <alchemy/task.h>
+    #include <alchemy/timer.h>
+  #else
+    #include <native/task.h>
+    #include <native/timer.h>
+  #endif
 
 #elif (CISST_OS == CISST_WINDOWS)
     #include <windows.h>
