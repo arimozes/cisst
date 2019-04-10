@@ -42,13 +42,13 @@ if( UNIX )
     if(${XENO_VERSION_MAJOR} EQUAL 3)
 
       # Run these xeno-config commands to retrieve the necessary compile and link content
-      #execute_process(COMMAND ${XENO_CONFIG} --alchemy --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-      #execute_process(COMMAND ${XENO_CONFIG} --alchemy --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+      #execute_process(COMMAND ${XENO_CONFIG} --alchemy --posix --rtdm --cflags OUTPUT_VARIABLE XENO_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+      #execute_process(COMMAND ${XENO_CONFIG} --alchemy --posix --rtdm --ldflags OUTPUT_VARIABLE XENO_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
       #MESSAGE(STATUS "XENO_CFLAGS: \"${XENO_CFLAGS}\"")
       #MESSAGE(STATUS "XENO_LDFLAGS: \"${XENO_LDFLAGS}\"")
 
       # add compile/preprocess options as indicated by xeno-config
-      set( XENOMAI_DEFINITIONS "-D_GNU_SOURCE -D_REENTRANT -fasynchronous-unwind-tables -D__COBALT__" )
+      set( XENOMAI_DEFINITIONS "-D_GNU_SOURCE -D_REENTRANT -fasynchronous-unwind-tables -D__COBALT__ -D__COBALT_WRAP__" )
 
       # add directories for xenomai include files
       set( CISST_XENOMAI_INCLUDE_DIRECTORIES ${XENOMAI_INCLUDE_DIR}/cobalt ${XENOMAI_INCLUDE_DIR} ${XENOMAI_INCLUDE_DIR}/alchemy )
@@ -67,6 +67,7 @@ if( UNIX )
       # additional linker content as indicated by xeno-config
       # Note: using these in hardcoded form requires xenomai be present in /usr/xenomai
       set( XENOMAI_LDFLAGS_ADDITIONAL "-Wl,--no-as-needed")
+      set( XENOMAI_LDFLAGS_ADDITIONAL "${XENOMAI_LDFLAGS_ADDITIONAL} -Wl,@/usr/xenomai/lib/cobalt.wrappers")
       set( XENOMAI_LDFLAGS_ADDITIONAL "${XENOMAI_LDFLAGS_ADDITIONAL} -Wl,@/usr/xenomai/lib/modechk.wrappers")
       set( XENOMAI_LDFLAGS_ADDITIONAL "${XENOMAI_LDFLAGS_ADDITIONAL} /usr/xenomai/lib/xenomai/bootstrap.o")
       set( XENOMAI_LDFLAGS_ADDITIONAL "${XENOMAI_LDFLAGS_ADDITIONAL} -Wl,--wrap=main")
